@@ -1,17 +1,23 @@
 import { Candidate } from "../interfaces/Candidate.interface";
 const SavedCandidates = () => {
   const savedCandidates = localStorage.getItem("Users");
-  const savedCandidatesArray = JSON.parse(savedCandidates as string);
-  console.log(savedCandidatesArray);
-  const handleDeleteUser = (index: number | undefined) => {
-    if (index !== undefined) {
+let savedCandidatesArray: Candidate[] = [];
+
+// Check if savedCandidates is not null before parsing
+if (savedCandidates) {
+  savedCandidatesArray = JSON.parse(savedCandidates);
+} 
+  const handleDeleteUser = (id: number | undefined) => {
+    if (id !== undefined) {
+      // Filter out the candidate with the specified id
       const newCandidates = savedCandidatesArray.filter(
-        (candidate: Candidate) => candidate.id !== index
+        (candidate: Candidate) => candidate.id !== id
       );
+      // Update local storage with the new candidates array
       localStorage.setItem("Users", JSON.stringify(newCandidates));
       window.location.reload();
     }
-   }
+  }
   if (savedCandidatesArray) {
     return savedCandidatesArray.map((candidate: Candidate) => {
       return (
