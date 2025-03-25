@@ -1,30 +1,25 @@
-import { useState, useEffect } from "react";
 import { Candidate } from "../interfaces/Candidate.interface";
-// used expert learner to add useEffect
 const SavedCandidates = () => {
-  const [users, setUsers] = useState<Candidate[]>([]);
+  const savedCandidates = localStorage.getItem("recipe");
+let savedCandidatesArray: Candidate[] = [];
 
-  // Fetch saved candidates from local storage when the component mounts
-  useEffect(() => {
-    const savedCandidates = localStorage.getItem("Users");
-    if (savedCandidates) {
-      setUsers(JSON.parse(savedCandidates));
-    }
-  }, []); // Empty dependency array means this runs once on mount
-
+// Check if savedCandidates is not null before parsing
+if (savedCandidates) {
+  savedCandidatesArray = JSON.parse(savedCandidates);
+} 
   const handleDeleteUser = (id: number | undefined) => {
     if (id !== undefined) {
       // Filter out the candidate with the specified id
-      const newCandidates = users.filter(
+      const newCandidates = savedCandidatesArray.filter(
         (candidate: Candidate) => candidate.id !== id
       );
       // Update local storage with the new candidates array
-      setUsers(newCandidates);
-      localStorage.setItem("Users", JSON.stringify(newCandidates)); // Use newCandidates here
+      localStorage.setItem("recipe", JSON.stringify(newCandidates));
+      window.location.reload()
     }
   }
-  if (users.length > 0) {
-    return users.map((candidate: Candidate) => {
+  if (savedCandidatesArray) {
+    return savedCandidatesArray.map((candidate: Candidate) => {
       return (
         <div className="savedCardContainer" key={candidate.id}>
           <div className="savedCandidateContainer">
@@ -116,11 +111,12 @@ const SavedCandidates = () => {
           </div>
         </div>
       );
+    
     });
-  } else {
-    return <h1>No saved candidates</h1>;
+  }else{
+    return <h1>No saved candidates</h1>
   }
-};
+  };
   
 
 
